@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Platformer Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Start Screen Styles */
+        #startScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 100;
+        }
+
+        .start-container {
+            text-align: center;
+        }
+
+        .start-container h1 {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 2rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .play-btn {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff4757 0%, #ee5a6f 100%);
+            border: none;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 -4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), inset 0 -4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .play-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Game Screen Styles */
+        #gameScreen {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #gameScreen.show {
+            display: block;
+        }
+
+        canvas {
+            display: block;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
+        }
+
+        /* Game Over Screen Styles */
+        #gameOverScreen {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            z-index: 200;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #gameOverScreen.show {
+            display: flex;
+        }
+
+        .game-over-container {
+            text-align: center;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .game-over-container h1 {
+            font-size: 5rem;
+            color: #ffd700;
+            margin-bottom: 2rem;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-over-container p {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .restart-btn {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #ff4757 0%, #ee5a6f 100%);
+            border: none;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .restart-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="startScreen">
+        <div class="start-container">
+            <h1>Platformer Game</h1>
+            <button class="play-btn" id="playBtn">PLAY</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen">
+        <div class="game-over-container">
+            <h1>YOU WIN!</h1>
+            <p>You reached Platform 4!</p>
+            <button class="restart-btn" id="restartBtn">Play Again</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
