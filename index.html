@@ -25,6 +25,7 @@
             height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             z-index: 100;
+            flex-direction: column;
         }
 
         .start-container {
@@ -48,13 +49,21 @@
             }
         }
 
-        .play-btn {
-            width: 200px;
-            height: 200px;
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .play-btn, .menu-btn {
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             background: linear-gradient(135deg, #ff4757 0%, #ee5a6f 100%);
             border: none;
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: bold;
             color: white;
             cursor: pointer;
@@ -63,17 +72,193 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .play-btn:hover {
+        .menu-btn {
+            width: 120px;
+            height: 120px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%);
+        }
+
+        .menu-btn.settings {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+
+        .menu-btn.leaderboard {
+            background: linear-gradient(135deg, #f39c12 0%, #d68910 100%);
+        }
+
+        .play-btn:hover, .menu-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), inset 0 -4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .play-btn:active {
+        .play-btn:active, .menu-btn:active {
             transform: scale(0.95);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 -2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        /* Game Screen Styles */
+        .controls-info {
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .controls-info p {
+            margin: 0.3rem 0;
+        }
+
+        /* Level Select Screen */
+        #levelSelectScreen {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            z-index: 100;
+            flex-direction: column;
+        }
+
+        .level-container {
+            text-align: center;
+        }
+
+        .level-container h1 {
+            font-size: 3rem;
+            color: #FFD700;
+            margin-bottom: 2rem;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            width: 180px;
+            height: 180px;
+            border-radius: 15px;
+            border: none;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.easy {
+            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+        }
+
+        .difficulty-btn.medium {
+            background: linear-gradient(135deg, #F39C12 0%, #D68910 100%);
+        }
+
+        .difficulty-btn.hard {
+            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+        }
+
+        .difficulty-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .difficulty-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Settings Screen */
+        #settingsScreen {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .settings-container {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-container h1 {
+            font-size: 2.5rem;
+            color: #FFD700;
+            margin-bottom: 2rem;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .setting-item {
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .setting-item input[type="range"],
+        .setting-item select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: none;
+            background: #1a1a1a;
+            color: white;
+        }
+
+        /* Leaderboard Screen */
+        #leaderboardScreen {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .leaderboard-container {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .leaderboard-container h1 {
+            font-size: 2.5rem;
+            color: #FFD700;
+            margin-bottom: 2rem;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        #leaderboardContent {
+            margin-bottom: 2rem;
+        }
+
+        /* Game Screen */
         #gameScreen {
             display: none;
             width: 100vw;
@@ -92,7 +277,7 @@
             background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
         }
 
-        /* Pause Screen Styles */
+        /* Pause Screen */
         #pauseScreen {
             display: none;
             justify-content: center;
@@ -150,7 +335,7 @@
             background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
         }
 
-        /* Game Over Screen Styles */
+        /* Game Over Screen */
         #gameOverScreen {
             display: none;
             justify-content: center;
@@ -240,16 +425,22 @@
             transform: scale(0.95);
         }
 
-        /* Tutorial/Instructions */
-        .controls-info {
-            color: #ddd;
-            font-size: 0.9rem;
-            margin-top: 1.5rem;
-            line-height: 1.6;
+        /* Utility Classes */
+        .back-btn {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            background: #555;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
         }
 
-        .controls-info p {
-            margin: 0.3rem 0;
+        .back-btn:hover {
+            background: #666;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -258,16 +449,70 @@
     <div id="startScreen">
         <div class="start-container">
             <h1>🎮 Platformer Game</h1>
-            <button class="play-btn" id="playBtn">PLAY</button>
+            <div class="button-group">
+                <button class="play-btn" id="playBtn">PLAY</button>
+                <button class="menu-btn settings" id="settingsBtn">⚙️</button>
+                <button class="menu-btn leaderboard" id="leaderboardBtn">🏆</button>
+            </div>
             <div class="controls-info">
                 <p><strong>Controls:</strong></p>
                 <p>W - Jump | A - Move Left | D - Move Right</p>
                 <p>ESC - Pause Game</p>
                 <p><strong>Collect stars ⭐ for points!</strong></p>
-                <p><strong>Avoid spikes 🔻 and reach Platform 25!</strong></p>
+                <p><strong>Avoid spikes 🔻 and reach the final platform!</strong></p>
                 <p><strong>Platform Types:</strong></p>
-                <p>🟠 Moving | 🟤 Crumbling | 🔴 Bouncy | 🔵 Icy</p>
+                <p>🟠 Moving | 🟤 Crumbling | 🔴 Bouncy | 🔵 Icy | 🟣 Rotating</p>
             </div>
+        </div>
+    </div>
+
+    <!-- Level Select Screen -->
+    <div id="levelSelectScreen">
+        <div class="level-container">
+            <h1>Choose Difficulty</h1>
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn easy" data-difficulty="easy">EASY</button>
+                <button class="difficulty-btn medium" data-difficulty="medium">MEDIUM</button>
+                <button class="difficulty-btn hard" data-difficulty="hard">HARD</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settingsScreen">
+        <div class="settings-container">
+            <h1>Settings</h1>
+            
+            <div class="setting-item">
+                <label for="volumeSlider">Volume:</label>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5">
+            </div>
+
+            <div class="setting-item">
+                <label for="graphicsSelect">Graphics Quality:</label>
+                <select id="graphicsSelect">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label>Key Bindings:</label>
+                <p style="font-size: 0.9rem;">W - Jump | A - Left | D - Right | ESC - Pause</p>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem;">(Custom key mapping coming soon)</p>
+            </div>
+
+            <button class="back-btn" id="backFromSettings">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Leaderboard Screen -->
+    <div id="leaderboardScreen">
+        <div class="leaderboard-container">
+            <h1>🏆 Leaderboard</h1>
+            <div id="leaderboardContent"></div>
+            <button class="back-btn" id="backFromLeaderboard">Back to Menu</button>
         </div>
     </div>
 
@@ -279,7 +524,7 @@
     <!-- Pause Screen -->
     <div id="pauseScreen">
         <div class="pause-container">
-            <h1>PAUSED</h1>
+            <h1>⏸️ PAUSED</h1>
             <button class="pause-btn" id="resumeBtn">Resume</button>
             <button class="pause-btn quit" id="quitBtn">Quit to Menu</button>
             <p style="color: #95a5a6; margin-top: 2rem;">Press ESC to resume</p>
@@ -290,7 +535,7 @@
     <div id="gameOverScreen">
         <div class="game-over-container">
             <h1>🏆 YOU WIN!</h1>
-            <p>You reached Platform 25!</p>
+            <p>You reached the final platform!</p>
             
             <div class="stats-display">
                 <p><strong>Score:</strong> <span id="finalScore">0</span> ⭐</p>
