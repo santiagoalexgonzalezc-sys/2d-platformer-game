@@ -4,6 +4,14 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+// Camera object
+const camera = {
+    x: 0,
+    y: 0,
+    width: canvas.width,
+    height: canvas.height
+};
+
 // Game States
 const gameStates = {
     START: 'start',
@@ -45,26 +53,77 @@ window.addEventListener('keyup', (e) => {
 
 // Platforms Array
 let platforms = [];
+let firstPlatformPos = { x: 0, y: 0 };
 
 // Initialize Platforms
 function initPlatforms() {
     platforms = [];
     const platformWidth = 150;
     const platformHeight = 30;
-    const platformSpacing = 180;
-    const startX = 100;
-    const platformY = canvas.height - 150;
+    const baseY = canvas.height - 150;
 
-    for (let i = 0; i < 4; i++) {
+    // Platform 1 (start)
+    platforms.push({
+        x: 100,
+        y: baseY,
+        width: platformWidth,
+        height: platformHeight,
+        color: '#4CAF50',
+        number: 1,
+        isFinal: false
+    });
+
+    firstPlatformPos = { x: 100, y: baseY };
+
+    let currentX = 100 + platformWidth + 100;
+    let currentY = baseY;
+
+    // Platforms 2-24 (varied heights and positions)
+    for (let i = 2; i <= 24; i++) {
+        // Randomly decide if platform goes up or stays roughly same level
+        const heightVariation = Math.random();
+        let newY;
+
+        if (heightVariation < 0.4) {
+            // Go up
+            newY = currentY - (30 + Math.random() * 40);
+        } else if (heightVariation < 0.7) {
+            // Go down slightly
+            newY = currentY + (Math.random() * 30);
+        } else {
+            // Stay roughly same
+            newY = currentY + (Math.random() * 20 - 10);
+        }
+
+        // Keep platforms in reasonable bounds
+        newY = Math.max(100, Math.min(baseY, newY));
+        currentY = newY;
+
+        // Add horizontal spacing
+        currentX += platformWidth + (80 + Math.random() * 40);
+
         platforms.push({
-            x: startX + i * platformSpacing,
-            y: platformY,
+            x: currentX,
+            y: newY,
             width: platformWidth,
             height: platformHeight,
-            color: ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0'][i],
-            number: i + 1
+            color: `hsl(${Math.random() * 360}, 70%, 50%)`,
+            number: i,
+            isFinal: false
         });
     }
+
+    // Platform 25 (final platform)
+    currentX += platformWidth + 100;
+    platforms.push({
+        x: currentX,
+        y: baseY,
+        width: platformWidth,
+        height: platformHeight,
+        color: '#FFD700',
+        number: 25,
+        isFinal: true
+    });
 }
 
 // Initialize Game
@@ -76,6 +135,33 @@ function initGame() {
     player.velocityX = 0;
     player.jumping = false;
     player.onGround = false;
+    camera.x = 0;
+    camera.y = 0;
+}
+
+// Reset Player to First Platform
+function resetToFirstPlatform() {
+    player.x = platforms[0].x + platforms[0].width / 2 - player.width / 2;
+    player.y = platforms[0].y - player.height;
+    player.velocityY = 0;
+    player.velocityX = 0;
+    camera.x = 0;
+    camera.y = 0;
+}
+
+// Update Camera to follow player
+function updateCamera() {
+    const targetCameraX = player.x - canvas.width / 4;
+    const targetCameraY = player.y - canvas.height / 3;
+
+    // Smooth camera following
+    camera.x += (targetCameraX - camera.x) * 0.1;
+    camera.y += (targetCameraY - camera.y) * 0.1;
+
+    // Clamp camera to level bounds
+    const maxCameraX = platforms[platforms.length - 1].x + platforms[platforms.length - 1].width - canvas.width;
+    camera.x = Math.max(0, Math.min(camera.x, maxCameraX));
+    camera.y = Math.max(0, Math.min(camera.y, 500));
 }
 
 // Update Player Physics
@@ -97,13 +183,6 @@ function updatePlayer() {
     }
 
     player.x += player.velocityX;
-
-    // Screen wrapping (optional)
-    if (player.x + player.width < 0) {
-        player.x = canvas.width;
-    } else if (player.x > canvas.width) {
-        player.x = -player.width;
-    }
 
     // Vertical Movement (Gravity)
     player.velocityY += gravity;
@@ -130,61 +209,99 @@ function updatePlayer() {
             player.velocityY = 0;
             player.onGround = true;
 
-            // Check if player reached platform 4
-            if (platform.number === 4) {
+            // Check if player reached final platform
+            if (platform.isFinal) {
                 endGame();
             }
         }
     });
 
-    // Fall off screen (lose condition - optional)
-    if (player.y > canvas.height) {
-        initGame();
+    // Fall off screen - reset to first platform
+    if (player.y > canvas.height + 200) {
+        resetToFirstPlatform();
+    }
+
+    // Fall off left side
+    if (player.x + player.width < -50) {
+        resetToFirstPlatform();
     }
 }
 
 // Draw Player
 function drawPlayer() {
+    const screenX = player.x - camera.x;
+    const screenY = player.y - camera.y;
+
     // Body
     ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.width, player.height);
+    ctx.fillRect(screenX, screenY, player.width, player.height);
 
     // Eyes
     ctx.fillStyle = 'white';
-    ctx.fillRect(player.x + 8, player.y + 10, 6, 8);
-    ctx.fillRect(player.x + 16, player.y + 10, 6, 8);
+    ctx.fillRect(screenX + 8, screenY + 10, 6, 8);
+    ctx.fillRect(screenX + 16, screenY + 10, 6, 8);
 
     // Pupils
     ctx.fillStyle = 'black';
-    ctx.fillRect(player.x + 9, player.y + 11, 4, 4);
-    ctx.fillRect(player.x + 17, player.y + 11, 4, 4);
+    ctx.fillRect(screenX + 9, screenY + 11, 4, 4);
+    ctx.fillRect(screenX + 17, screenY + 11, 4, 4);
 
     // Smile
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(player.x + 15, player.y + 25, 5, 0, Math.PI);
+    ctx.arc(screenX + 15, screenY + 25, 5, 0, Math.PI);
     ctx.stroke();
 }
 
 // Draw Platforms
 function drawPlatforms() {
     platforms.forEach((platform) => {
-        // Platform base
-        ctx.fillStyle = platform.color;
-        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+        const screenX = platform.x - camera.x;
+        const screenY = platform.y - camera.y;
 
-        // Platform shadow
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        ctx.fillRect(platform.x, platform.y + platform.height, platform.width, 5);
+        // Only draw if in view
+        if (screenX + platform.width > 0 && screenX < canvas.width &&
+            screenY + platform.height > 0 && screenY < canvas.height) {
+            
+            // Platform base
+            ctx.fillStyle = platform.color;
+            ctx.fillRect(screenX, screenY, platform.width, platform.height);
 
-        // Platform number
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 18px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(platform.number, platform.x + platform.width / 2, platform.y + platform.height / 2);
+            // Platform shadow
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(screenX, screenY + platform.height, platform.width, 5);
+
+            // Platform border for final platform
+            if (platform.isFinal) {
+                ctx.strokeStyle = '#FFB700';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(screenX, screenY, platform.width, platform.height);
+            }
+
+            // Platform number
+            ctx.fillStyle = platform.isFinal ? '#333' : 'white';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(platform.number, screenX + platform.width / 2, screenY + platform.height / 2);
+        }
     });
+}
+
+// Draw HUD
+function drawHUD() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(10, 10, 250, 80);
+
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 20px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText('Platform ' + Math.ceil(camera.x / 230), 20, 35);
+    
+    ctx.font = '16px Arial';
+    ctx.fillText('Controls: W(Jump) A(Left) D(Right)', 20, 60);
+    ctx.fillText('Reach Platform 25!', 20, 80);
 }
 
 // Draw Game
@@ -199,6 +316,7 @@ function drawGame() {
     // Draw platforms and player
     drawPlatforms();
     drawPlayer();
+    drawHUD();
 }
 
 // End Game
@@ -211,6 +329,7 @@ function endGame() {
 function gameLoop() {
     if (currentState === gameStates.PLAYING) {
         updatePlayer();
+        updateCamera();
         drawGame();
     }
     requestAnimationFrame(gameLoop);
