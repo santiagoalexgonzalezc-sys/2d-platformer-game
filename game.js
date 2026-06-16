@@ -75,7 +75,7 @@ function initPlatforms() {
 
     firstPlatformPos = { x: 100, y: baseY };
 
-    let currentX = 100 + platformWidth + 100;
+    let currentX = 100 + platformWidth + 50;
     let currentY = baseY;
 
     // Platforms 2-24 (varied heights and positions)
@@ -86,21 +86,21 @@ function initPlatforms() {
 
         if (heightVariation < 0.4) {
             // Go up
-            newY = currentY - (30 + Math.random() * 40);
+            newY = currentY - (20 + Math.random() * 30);
         } else if (heightVariation < 0.7) {
             // Go down slightly
-            newY = currentY + (Math.random() * 30);
+            newY = currentY + (Math.random() * 20);
         } else {
             // Stay roughly same
-            newY = currentY + (Math.random() * 20 - 10);
+            newY = currentY + (Math.random() * 15 - 7);
         }
 
         // Keep platforms in reasonable bounds
         newY = Math.max(100, Math.min(baseY, newY));
         currentY = newY;
 
-        // Add horizontal spacing
-        currentX += platformWidth + (80 + Math.random() * 40);
+        // Add horizontal spacing - much closer now
+        currentX += platformWidth + (40 + Math.random() * 30);
 
         platforms.push({
             x: currentX,
@@ -114,7 +114,7 @@ function initPlatforms() {
     }
 
     // Platform 25 (final platform)
-    currentX += platformWidth + 100;
+    currentX += platformWidth + 50;
     platforms.push({
         x: currentX,
         y: baseY,
