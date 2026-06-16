@@ -92,6 +92,64 @@
             background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
         }
 
+        /* Pause Screen Styles */
+        #pauseScreen {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .pause-container {
+            text-align: center;
+            animation: slideIn 0.3s ease;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .pause-container h1 {
+            font-size: 4rem;
+            color: #FFD700;
+            margin-bottom: 2rem;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .pause-btn {
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%);
+            border: none;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-width: 200px;
+        }
+
+        .pause-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .pause-btn:active {
+            transform: scale(0.95);
+        }
+
+        .pause-btn.quit {
+            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+        }
+
         /* Game Over Screen Styles */
         #gameOverScreen {
             display: none;
@@ -113,6 +171,10 @@
         .game-over-container {
             text-align: center;
             animation: slideIn 0.5s ease;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
         @keyframes slideIn {
@@ -133,10 +195,25 @@
             text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
         }
 
+        .stats-display {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 2px solid #FFD700;
+        }
+
+        .stats-display p {
+            font-size: 1.5rem;
+            color: white;
+            margin: 0.5rem 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
         .game-over-container p {
             font-size: 2rem;
             color: white;
-            margin-bottom: 3rem;
+            margin-bottom: 1rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
@@ -151,6 +228,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             font-weight: bold;
+            margin-top: 1rem;
         }
 
         .restart-btn:hover {
@@ -161,14 +239,35 @@
         .restart-btn:active {
             transform: scale(0.95);
         }
+
+        /* Tutorial/Instructions */
+        .controls-info {
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .controls-info p {
+            margin: 0.3rem 0;
+        }
     </style>
 </head>
 <body>
     <!-- Start Screen -->
     <div id="startScreen">
         <div class="start-container">
-            <h1>Platformer Game</h1>
+            <h1>🎮 Platformer Game</h1>
             <button class="play-btn" id="playBtn">PLAY</button>
+            <div class="controls-info">
+                <p><strong>Controls:</strong></p>
+                <p>W - Jump | A - Move Left | D - Move Right</p>
+                <p>ESC - Pause Game</p>
+                <p><strong>Collect stars ⭐ for points!</strong></p>
+                <p><strong>Avoid spikes 🔻 and reach Platform 25!</strong></p>
+                <p><strong>Platform Types:</strong></p>
+                <p>🟠 Moving | 🟤 Crumbling | 🔴 Bouncy | 🔵 Icy</p>
+            </div>
         </div>
     </div>
 
@@ -177,11 +276,28 @@
         <canvas id="gameCanvas"></canvas>
     </div>
 
+    <!-- Pause Screen -->
+    <div id="pauseScreen">
+        <div class="pause-container">
+            <h1>PAUSED</h1>
+            <button class="pause-btn" id="resumeBtn">Resume</button>
+            <button class="pause-btn quit" id="quitBtn">Quit to Menu</button>
+            <p style="color: #95a5a6; margin-top: 2rem;">Press ESC to resume</p>
+        </div>
+    </div>
+
     <!-- Game Over Screen -->
     <div id="gameOverScreen">
         <div class="game-over-container">
-            <h1>YOU WIN!</h1>
-            <p>You reached Platform 4!</p>
+            <h1>🏆 YOU WIN!</h1>
+            <p>You reached Platform 25!</p>
+            
+            <div class="stats-display">
+                <p><strong>Score:</strong> <span id="finalScore">0</span> ⭐</p>
+                <p><strong>Time:</strong> <span id="finalTime">0:00</span></p>
+                <p><strong>Deaths:</strong> <span id="finalDeaths">0</span></p>
+            </div>
+
             <button class="restart-btn" id="restartBtn">Play Again</button>
         </div>
     </div>
