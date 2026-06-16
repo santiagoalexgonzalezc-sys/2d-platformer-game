@@ -108,68 +108,219 @@
             margin: 0.3rem 0;
         }
 
-        /* Level Select Screen */
-        #levelSelectScreen {
+        /* Character & Level Select Screen */
+        #characterLevelScreen {
             display: none;
-            justify-content: center;
-            align-items: center;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             z-index: 100;
             flex-direction: column;
+            overflow-y: auto;
         }
 
-        .level-container {
-            text-align: center;
+        .char-level-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
-        .level-container h1 {
-            font-size: 3rem;
+        /* Character Selection (Top Half) */
+        .character-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .character-section h2 {
+            font-size: 2.5rem;
             color: #FFD700;
             margin-bottom: 2rem;
-            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .difficulty-buttons {
-            display: flex;
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
+            max-width: 800px;
         }
 
-        .difficulty-btn {
-            width: 180px;
-            height: 180px;
-            border-radius: 15px;
-            border: none;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: white;
+        .character-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
 
-        .difficulty-btn.easy {
+        .character-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .character-option:hover .character-box {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .character-option.selected .character-box {
+            border: 3px solid #FFD700;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .character-name {
+            margin-top: 0.5rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Level Selection (Bottom Half) */
+        .level-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .level-section h2 {
+            font-size: 2.5rem;
+            color: #FFD700;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1.5rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .level-btn {
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .level-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .level-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .level-btn.selected {
+            background: linear-gradient(135deg, #f39c12 0%, #d68910 100%);
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.8);
+        }
+
+        /* Difficulty Selection Modal */
+        #difficultyModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .difficulty-modal-content {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .difficulty-modal-content h3 {
+            font-size: 2rem;
+            color: #FFD700;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .difficulty-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .difficulty-option {
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .difficulty-option.easy {
             background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
         }
 
-        .difficulty-btn.medium {
+        .difficulty-option.medium {
             background: linear-gradient(135deg, #F39C12 0%, #D68910 100%);
         }
 
-        .difficulty-btn.hard {
+        .difficulty-option.hard {
             background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
         }
 
-        .difficulty-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        .difficulty-option.impossible {
+            background: linear-gradient(135deg, #8E44AD 0%, #6C3483 100%);
         }
 
-        .difficulty-btn:active {
-            transform: scale(0.95);
+        .difficulty-option:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .difficulty-option:active {
+            transform: scale(0.98);
         }
 
         /* Settings Screen */
@@ -466,14 +617,76 @@
         </div>
     </div>
 
-    <!-- Level Select Screen -->
-    <div id="levelSelectScreen">
-        <div class="level-container">
-            <h1>Choose Difficulty</h1>
-            <div class="difficulty-buttons">
-                <button class="difficulty-btn easy" data-difficulty="easy">EASY</button>
-                <button class="difficulty-btn medium" data-difficulty="medium">MEDIUM</button>
-                <button class="difficulty-btn hard" data-difficulty="hard">HARD</button>
+    <!-- Character & Level Select Screen -->
+    <div id="characterLevelScreen">
+        <div class="char-level-content">
+            <!-- Character Selection -->
+            <div class="character-section">
+                <h2>Choose Your Character</h2>
+                <div class="character-grid">
+                    <div class="character-option selected" data-skin="red">
+                        <div class="character-box" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);"></div>
+                        <div class="character-name">Red</div>
+                    </div>
+                    <div class="character-option" data-skin="blue">
+                        <div class="character-box" style="background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%);"></div>
+                        <div class="character-name">Blue</div>
+                    </div>
+                    <div class="character-option" data-skin="green">
+                        <div class="character-box" style="background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);"></div>
+                        <div class="character-name">Green</div>
+                    </div>
+                    <div class="character-option" data-skin="yellow">
+                        <div class="character-box" style="background: linear-gradient(135deg, #F39C12 0%, #D68910 100%);"></div>
+                        <div class="character-name">Yellow</div>
+                    </div>
+                    <div class="character-option" data-skin="purple">
+                        <div class="character-box" style="background: linear-gradient(135deg, #9B59B6 0%, #7D3C98 100%);"></div>
+                        <div class="character-name">Purple</div>
+                    </div>
+                    <div class="character-option" data-skin="pink">
+                        <div class="character-box" style="background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);"></div>
+                        <div class="character-name">Pink</div>
+                    </div>
+                    <div class="character-option" data-skin="cyan">
+                        <div class="character-box" style="background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);"></div>
+                        <div class="character-name">Cyan</div>
+                    </div>
+                    <div class="character-option" data-skin="orange">
+                        <div class="character-box" style="background: linear-gradient(135deg, #FF6F00 0%, #E65100 100%);"></div>
+                        <div class="character-name">Orange</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level Selection -->
+            <div class="level-section">
+                <h2>Select Your Level</h2>
+                <div class="levels-grid">
+                    <button class="level-btn" data-level="1">Level 1</button>
+                    <button class="level-btn" data-level="2">Level 2</button>
+                    <button class="level-btn" data-level="3">Level 3</button>
+                    <button class="level-btn" data-level="4">Level 4</button>
+                    <button class="level-btn" data-level="5">Level 5</button>
+                    <button class="level-btn" data-level="6">Level 6</button>
+                    <button class="level-btn" data-level="7">Level 7</button>
+                    <button class="level-btn" data-level="8">Level 8</button>
+                    <button class="level-btn" data-level="9">Level 9</button>
+                    <button class="level-btn" data-level="10">Level 10</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Difficulty Modal -->
+    <div id="difficultyModal">
+        <div class="difficulty-modal-content">
+            <h3>Choose Difficulty for Level <span id="levelNumber">1</span></h3>
+            <div class="difficulty-options">
+                <button class="difficulty-option easy" data-difficulty="easy">EASY</button>
+                <button class="difficulty-option medium" data-difficulty="medium">MEDIUM</button>
+                <button class="difficulty-option hard" data-difficulty="hard">HARD</button>
+                <button class="difficulty-option impossible" data-difficulty="impossible">IMPOSSIBLE</button>
             </div>
         </div>
     </div>
